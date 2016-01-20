@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='vgmparse',
-    version='1.0.0',
+    version='1.1.0',
     description='VGM (Video Game Music) file parser',
     url='https://github.com/cdodd/vgmparse',
     author='Craig Dodd',
@@ -14,6 +14,7 @@ setup(
         'Topic :: Multimedia :: Sound/Audio',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
     ],
     packages=find_packages(),
 )

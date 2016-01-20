@@ -1,13 +1,16 @@
-#!/usr/bin/env python
-
 import gzip
-from StringIO import StringIO
 import struct
+import sys
+
+if (sys.version_info > (3, 0)):
+    from io import BytesIO as ByteBuffer
+else:
+    from StringIO import StringIO as ByteBuffer
 
 
 class Parser:
     # VGM file identifier
-    vgm_magic_number = 'Vgm '
+    vgm_magic_number = b'Vgm '
 
     # VGM metadata offsets
     metadata_offsets = {
@@ -45,7 +48,7 @@ class Parser:
 
     def __init__(self, vgm_data):
         # Store the VGM data and validate it
-        self.data = StringIO(vgm_data)
+        self.data = ByteBuffer(vgm_data)
         self.validate_vgm_data()
 
         # Set up the variables that will be populated
@@ -80,7 +83,7 @@ class Parser:
 
             # 0x4f dd - Game Gear PSG stereo, write dd to port 0x06
             # 0x50 dd - PSG (SN76489/SN76496) write value dd
-            if command in ['\x4f', '\x50']:
+            if command in [b'\x4f', b'\x50']:
                 self.command_list.append({
                     'command': command,
                     'data': self.data.read(1),
@@ -90,14 +93,14 @@ class Parser:
             # 0x52 aa dd - YM2612 port 0, write value dd to register aa
             # 0x53 aa dd - YM2612 port 1, write value dd to register aa
             # 0x54 aa dd - YM2151, write value dd to register aa
-            elif command in ['\x51', '\x52', '\x53', '\x54']:
+            elif command in [b'\x51', b'\x52', b'\x53', b'\x54']:
                 self.command_list.append({
                     'command': command,
                     'data': self.data.read(2),
                 })
 
             # 0x61 nn nn - Wait n samples, n can range from 0 to 65535
-            elif command == '\x61':
+            elif command == b'\x61':
                 self.command_list.append({
                     'command': command,
                     'data': struct.unpack('<H', self.data.read(2))[0],
@@ -106,16 +109,16 @@ class Parser:
             # 0x62 - Wait 735 samples (60th of a second)
             # 0x63 - Wait 882 samples (50th of a second)
             # 0x66 - End of sound data
-            elif command in ['\x62', '\x63', '\x66']:
+            elif command in [b'\x62', b'\x63', b'\x66']:
                 self.command_list.append({'command': command, 'data': None})
 
                 # Stop processing commands if we are at the end of the music
                 # data
-                if command == '\x66':
+                if command == b'\x66':
                     break
 
             # 0x67 0x66 tt ss ss ss ss - Data block
-            elif command == '\x67':
+            elif command == b'\x67':
                 # Skip the compatibility and type bytes (0x66 tt)
                 self.data.seek(2, 1)
 
@@ -123,17 +126,17 @@ class Parser:
                 data_block_size = struct.unpack('<I', self.data.read(4))[0]
 
                 # Store the data block for later use
-                self.data_block = StringIO(self.data.read(data_block_size))
+                self.data_block = ByteBuffer(self.data.read(data_block_size))
 
             # 0x7n - Wait n+1 samples, n can range from 0 to 15
             # 0x8n - YM2612 port 0 address 2A write from the data bank, then
             #        wait n samples; n can range from 0 to 15
-            elif '\x70' <= command <= '\x8f':
+            elif b'\x70' <= command <= b'\x8f':
                 self.command_list.append({'command': command, 'data': None})
 
             # 0xe0 dddddddd - Seek to offset dddddddd (Intel byte order) in PCM
             #                 data bank
-            elif command == '\xe0':
+            elif command == b'\xe0':
                 self.command_list.append({
                     'command': command,
                     'data': struct.unpack('<I', self.data.read(4))[0],
@@ -157,25 +160,25 @@ class Parser:
 
         # Get the length of the GD3 data, then read it
         gd3_length = struct.unpack('<I', self.data.read(4))[0]
-        gd3_data = StringIO(self.data.read(gd3_length))
+        gd3_data = ByteBuffer(self.data.read(gd3_length))
 
         # Parse the GD3 data
         gd3_fields = []
-        current_field = ''
+        current_field = b''
         while True:
             # Read two bytes. All characters (English and Japanese) in the GD3
             # data use two byte encoding
             char = gd3_data.read(2)
 
             # Break if we are at the end of the GD3 data
-            if char == '':
+            if char == b'':
                 break
 
             # Check if we are at the end of a field, if not then continue to
             # append to "current_field"
-            if char == '\x00\x00':
+            if char == b'\x00\x00':
                 gd3_fields.append(current_field)
-                current_field = ''
+                current_field = b''
             else:
                 current_field += char
 
