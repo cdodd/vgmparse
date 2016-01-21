@@ -6,6 +6,9 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - CHANGELOG.md
 
+### Changed
+- Add GD3 character encoding information to README.md
+
 ## [1.1.0] - 2016-01-20
 ### Added
 - Python 3 support

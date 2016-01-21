@@ -49,6 +49,12 @@ Go Straight
 Yuzo Koshiro
 ```
 
+As per the [GD3 specification](http://www.smspower.org/uploads/Music/gd3spec100.txt?sid=03f36df3451132209c81c18cd231534f)
+the GD3 data uses 2-byte character encoding, however the exact encoding is not
+specified, leaving it up to the VGM creator. This modules does not attempt to
+interpret the encoding, leaving the raw 2-byte encoding intact from the VGM
+file.
+
 ### VGM Commands
 The VGM commands are available as a `list` of `dict`s in the variable
 `command_list`:
