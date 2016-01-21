@@ -70,8 +70,8 @@ If a command does not have have any data then `data` will be `None`.
 block is parsed out for you.
 
 ### Data Block
-If a data block is present it is read into the `StringIO` variable
-`data_block`. You can then seek within this as if it were a file:
+If a data block is present it is read into the variable `data_block`. You can
+then seek and read like a file:
 
 ```
 @>>> vgm_data.data_block.seek(0)
