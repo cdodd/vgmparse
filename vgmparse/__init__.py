@@ -103,7 +103,7 @@ class Parser:
             elif command == b'\x61':
                 self.command_list.append({
                     'command': command,
-                    'data': struct.unpack('<H', self.data.read(2))[0],
+                    'data': self.data.read(2),
                 })
 
             # 0x62 - Wait 735 samples (60th of a second)
@@ -139,7 +139,7 @@ class Parser:
             elif command == b'\xe0':
                 self.command_list.append({
                     'command': command,
-                    'data': struct.unpack('<I', self.data.read(4))[0],
+                    'data': self.data.read(4),
                 })
 
         # Seek back to the original position in the VGM data
