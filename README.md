@@ -76,5 +76,5 @@ If a data block is present it is read into the `StringIO` variable
 ```
 >>> vgm_data.data_block.seek(0)
 >>> vgm_data.data_block.read(5)
-'\x00G\x00o\x00'
+'\x82\x88\x8a\x8a\x88'
 ```
