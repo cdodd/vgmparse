@@ -5,6 +5,7 @@ project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - Fix Data Block example in README.md
+- Update code examples in README.md to use Python 3
 
 ## [2.0.0] - 2016-01-21
 ### Added
