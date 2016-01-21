@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='vgmparse',
-    version='2.0.0',
+    version='2.0.1',
     description='VGM (Video Game Music) file parser',
     url='https://github.com/cdodd/vgmparse',
     author='Craig Dodd',
