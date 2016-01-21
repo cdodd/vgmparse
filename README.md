@@ -64,8 +64,7 @@ The VGM commands are available as a `list` of `dict`s in the variable
 [{'data': '(\x00', 'command': 'R'}, {'data': '(\x04', 'command': 'R'}, {'data': '(\x01', 'command': 'R'}]
 ```
 
-If a command does not have have any data then `data` will be `None`. Commands
-that have integer data (`0x61`, `0xe0`) are interpreted for you.
+If a command does not have have any data then `data` will be `None`.
 
 **Note:** `command_list` will not include any data block commands as the data
 block is parsed out for you.
