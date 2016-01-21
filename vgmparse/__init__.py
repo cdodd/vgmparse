@@ -8,9 +8,18 @@ else:
     from StringIO import StringIO as ByteBuffer
 
 
+class VersionError(Exception):
+    pass
+
+
 class Parser:
     # VGM file identifier
     vgm_magic_number = b'Vgm '
+
+    # Supported VGM versions
+    supported_ver_list = [
+        0x00000150,
+    ]
 
     # VGM metadata offsets
     metadata_offsets = {
@@ -57,8 +66,11 @@ class Parser:
         self.gd3_data = {}
         self.metadata = {}
 
-        # Parse the VGM metadata, GD3 data and the VGM commands
+        # Parse the VGM metadata and validate the VGM version
         self.parse_metadata()
+        self.validate_vgm_version()
+
+        # Parse GD3 data and the VGM commands
         self.parse_gd3()
         self.parse_commands()
 
@@ -251,3 +263,7 @@ class Parser:
 
         # Seek back to the original position in the VGM data
         self.data.seek(original_pos)
+
+    def validate_vgm_version(self):
+        if self.metadata['version'] not in self.supported_ver_list:
+            raise VersionError('VGM version is not supported')
