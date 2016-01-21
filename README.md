@@ -15,23 +15,23 @@ sudo pip install -e git+https://github.com/cdodd/vgmparse.git#egg=vgmparse
 First import the `vgmparse` module:
 
 ```
->>> import vgmparse
+@>>> import vgmparse
 ```
 
 ### Opening a VGM File
 Open a file in binary mode and pass the data to the `Parser` class:
 
 ```
->>> file_data = open('go_straight.vgm', 'rb').read()
->>> vgm_data = vgmparse.Parser(file_data)
+@>>> file_data = open('go_straight.vgm', 'rb').read()
+@>>> vgm_data = vgmparse.Parser(file_data)
 ```
 
 ### Read VGM Metadata
 The VGM metadata is available as a `dict` in the `metadata` variable:
 
 ```
->>> vgm_data.metadata
-{'ym2612_clock': 7670453, 'total_samples': 4609970, 'vgm_ident': 'Vgm ', 'vgm_data_offset': 12, 'eof_offset': 1110478, 'sn76489_clock': 3579545, 'ym2151_clock': 0, 'rate': 60, 'version': 336, 'loop_samples': 3951361, 'sn76489_feedback': 9, 'loop_offset': 50883, 'gd3_offset': 1110192, 'sn76489_shift_register_width': 16, 'ym2413_clock': 0}
+@>>> vgm_data.metadata
+{'total_samples': 4609970, 'vgm_data_offset': 12, 'vgm_ident': b'Vgm ', 'gd3_offset': 1110192, 'version': 336, 'ym2151_clock': 0, 'eof_offset': 1110478, 'sn76489_clock': 3579545, 'ym2413_clock': 0, 'loop_samples': 3951361, 'sn76489_feedback': 9, 'ym2612_clock': 7670453, 'loop_offset': 50883, 'rate': 60, 'sn76489_shift_register_width': 16}
 ```
 
 ### GD3 Data
@@ -39,13 +39,13 @@ GD3 data (track title, artist, etc) is available as a `dict` in the `gd3_data`
 variable:
 
 ```
->>> vgm_data.gd3_data.keys()
-['game_eng', 'artist_jap', 'console_jap', 'date', 'game_jap', 'title_jap', 'title_eng', 'notes', 'console_eng', 'vgm_creator', 'artist_eng']
+@>>> vgm_data.gd3_data.keys()
+dict_keys(['title_eng', 'console_jap', 'notes', 'game_eng', 'game_jap', 'artist_eng', 'vgm_creator', 'console_eng', 'artist_jap', 'title_jap', 'date'])
 
->>> print vgm_data.gd3_data['title_eng']
+@>>> print(vgm_data.gd3_data['title_eng'].decode())
 Go Straight
 
->>> print vgm_data.gd3_data['artist_eng']
+@>>> print(vgm_data.gd3_data['artist_eng'].decode())
 Yuzo Koshiro
 ```
 
@@ -60,8 +60,8 @@ The VGM commands are available as a `list` of `dict`s in the variable
 `command_list`:
 
 ```
->>> vgm_data.command_list[:3]
-[{'data': '(\x00', 'command': 'R'}, {'data': '(\x04', 'command': 'R'}, {'data': '(\x01', 'command': 'R'}]
+@>>> vgm_data.command_list[:3]
+[{'command': b'R', 'data': b'(\x00'}, {'command': b'R', 'data': b'(\x04'}, {'command': b'R', 'data': b'(\x01'}]
 ```
 
 If a command does not have have any data then `data` will be `None`.
@@ -74,7 +74,8 @@ If a data block is present it is read into the `StringIO` variable
 `data_block`. You can then seek within this as if it were a file:
 
 ```
->>> vgm_data.data_block.seek(0)
->>> vgm_data.data_block.read(5)
-'\x82\x88\x8a\x8a\x88'
+@>>> vgm_data.data_block.seek(0)
+0
+@>>> vgm_data.data_block.read(5)
+b'\x82\x88\x8a\x8a\x88'
 ```
